@@ -1,4 +1,4 @@
-module github.com/AnFair/hw01_hello_otus
+module github.com/AnFair/otusgolang-homework/hw01_hello_otus
 
 go 1.21
 
