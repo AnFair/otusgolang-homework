@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+
+	"4d63.com/strrev"
+)
+
 func main() {
-	// Place your code here.
+	phrase := "Hello, OTUS!"
+	fmt.Println(strrev.Reverse(phrase))
 }
