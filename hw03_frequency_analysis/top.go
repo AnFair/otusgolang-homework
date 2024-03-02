@@ -13,14 +13,14 @@ type Pair struct {
 func Top10(str string) []string {
 	wordCountMap := make(map[string]int)
 	words := strings.Fields(str)
-	wordCountArr := make([]Pair, 0, 10)
-	var result []string
+	wordCountArr := []Pair{}
+	result := []string{}
 	for _, word := range words {
 		wordCountMap[word]++
 	}
 
-	for k, v := range wordCountMap {
-		wordCountArr = append(wordCountArr, Pair{k, v})
+	for word, count := range wordCountMap {
+		wordCountArr = append(wordCountArr, Pair{word, count})
 	}
 	sort.Slice(wordCountArr, func(i, j int) bool {
 		if wordCountArr[i].count == wordCountArr[j].count {
@@ -33,7 +33,7 @@ func Top10(str string) []string {
 		if i == 10 {
 			break
 		}
-		result[i] = pair.word
+		result = append(result, pair.word)
 	}
 
 	return result
