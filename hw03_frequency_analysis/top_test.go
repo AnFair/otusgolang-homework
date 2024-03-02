@@ -1,8 +1,9 @@
 package hw03frequencyanalysis
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // Change to true if needed.
@@ -43,8 +44,9 @@ var text = `Как видите, он  спускается  по  лестни�
 		В этот вечер...`
 
 // \u000B - табуляция
-// \u180E - монгольский разделитель гласных, не whitespace символ :)
-var nogaText = " нога нога Нога нога Нога- --нога noga\v \v nogaНОГА Нога Нога noga \f\f  нога Нога нога  \n \u000B Нога- --нога  \u180E  noga nogaНОГА"
+// \u180E - монгольский разделитель гласных, не whitespace символ :).
+var nogaText = " нога нога Нога нога Нога- --нога noga\v \v nogaНОГА Нога Нога noga \f\f  нога Нога нога  " +
+	"\n \u000B Нога- --нога  \u180E  noga nogaНОГА"
 
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {

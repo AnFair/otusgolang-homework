@@ -11,16 +11,12 @@ type Pair struct {
 }
 
 func Top10(str string) []string {
-	var wordCountMap = make(map[string]int)
-	var words = strings.Fields(str)
-	var wordCountArr []Pair
+	wordCountMap := make(map[string]int)
+	words := strings.Fields(str)
+	wordCountArr := make([]Pair, 0, 10)
 	var result []string
 	for _, word := range words {
-		if _, present := wordCountMap[word]; present {
-			wordCountMap[word] = wordCountMap[word] + 1
-		} else {
-			wordCountMap[word] = 1
-		}
+		wordCountMap[word]++
 	}
 
 	for k, v := range wordCountMap {
@@ -37,7 +33,7 @@ func Top10(str string) []string {
 		if i == 10 {
 			break
 		}
-		result = append(result, pair.word)
+		result[i] = pair.word
 	}
 
 	return result
