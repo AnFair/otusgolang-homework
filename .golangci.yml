@@ -14,6 +14,7 @@ linters-settings:
         allow:
           - $gostd
           - 4d63.com/strrev
+          - github.com/stretchr/testify/require
 
 issues:
   exclude-rules:
