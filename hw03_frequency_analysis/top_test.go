@@ -1,9 +1,8 @@
 package hw03frequencyanalysis
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 // Change to true if needed.
@@ -43,9 +42,26 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+// \u000B - табуляция
+// \u180E - монгольский разделитель гласных, не whitespace символ :)
+var nogaText = " нога нога Нога нога Нога- --нога noga\v \v nogaНОГА Нога Нога noga \f\f  нога Нога нога  \n \u000B Нога- --нога  \u180E  noga nogaНОГА"
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
+	})
+
+	t.Run("positive test with unicode line breaks", func(t *testing.T) {
+		expected := []string{
+			"нога",     // 5
+			"Нога",     // 4
+			"noga",     // 3
+			"--нога",   // 2
+			"nogaНОГА", // 1
+			"Нога-",    // 1
+			"\u180e",   // 1
+		}
+		require.Equal(t, expected, Top10(nogaText))
 	})
 
 	t.Run("positive test", func(t *testing.T) {
