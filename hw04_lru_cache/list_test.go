@@ -7,6 +7,46 @@ import (
 )
 
 func TestList(t *testing.T) {
+	t.Run("move middle to front", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(1) // [1]
+		l.PushFront(2) // [2, 1]
+		l.PushBack(3)  // [2, 1, 3]
+		l.PushBack(4)  // [2, 1, 3, 4]
+		l.PushFront(5) // [5, 2, 1, 3, 4]
+		l.PushBack(6)  // [5, 2, 1, 3, 4, 6]
+		l.PushFront(7) // [7, 5, 2, 1, 3, 4, 6]
+		require.Equal(t, 7, l.Len())
+
+		require.Equal(t, []int{7, 5, 2, 1, 3, 4, 6}, toArray(l))
+
+		for i := l.Front(); i != nil; i = i.Next {
+			if i.Value == 1 {
+				l.MoveToFront(i) // [1, 7, 5, 2, 3, 4, 6]
+			}
+		}
+		require.Equal(t, []int{1, 7, 5, 2, 3, 4, 6}, toArray(l))
+	})
+
+	t.Run("singleton list", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(7)
+		require.Equal(t, l.Front(), l.Back())
+
+		l.Remove(l.Front())
+		require.Equal(t, 0, l.Len())
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+
+		l.PushFront(8)
+		l.MoveToFront(l.Back())
+		require.Equal(t, 1, l.Len())
+		require.Equal(t, l.Front(), l.Back())
+		require.Equal(t, 8, l.Front().Value)
+	})
+
 	t.Run("empty list", func(t *testing.T) {
 		l := NewList()
 
@@ -48,4 +88,12 @@ func TestList(t *testing.T) {
 		}
 		require.Equal(t, []int{70, 80, 60, 40, 10, 30, 50}, elems)
 	})
+}
+
+func toArray(l List) []int {
+	elems := make([]int, 0, l.Len())
+	for i := l.Front(); i != nil; i = i.Next {
+		elems = append(elems, i.Value.(int))
+	}
+	return elems
 }
