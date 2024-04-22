@@ -2,7 +2,6 @@ package hw05parallelexecution
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 	"sync/atomic"
 )
@@ -11,12 +10,11 @@ var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
 
 type Task func() error
 
-func startTask(wg *sync.WaitGroup, taskCh chan Task, errorCounter *int32, errorLimit int, ignoreErrors bool) {
+func startTask(wg *sync.WaitGroup, taskCh chan Task, errorCounter *atomic.Int32, errorLimit int, ignoreErrors bool) {
 	defer wg.Done()
 
 	for {
-		if !ignoreErrors && *errorCounter >= int32(errorLimit) {
-			fmt.Println("exiting due to exceeding error limit")
+		if !ignoreErrors && errorCounter.Load() >= int32(errorLimit) {
 			return
 		}
 
@@ -26,8 +24,7 @@ func startTask(wg *sync.WaitGroup, taskCh chan Task, errorCounter *int32, errorL
 		}
 		err := task()
 		if !ignoreErrors && err != nil {
-			atomic.AddInt32(errorCounter, 1)
-			fmt.Println("errorCounter is ", *errorCounter)
+			errorCounter.Add(1)
 		}
 	}
 }
@@ -37,7 +34,7 @@ func startTask(wg *sync.WaitGroup, taskCh chan Task, errorCounter *int32, errorL
 // m - кол-во допустимых ошибок; если m <= 0 - игнорировать ошибки.
 func Run(tasks []Task, n, m int) error {
 	wg := sync.WaitGroup{}
-	errorCount := int32(0)
+	errorCount := atomic.Int32{}
 	taskCh := make(chan Task, len(tasks))
 	ignoreErrors := m <= 0
 
@@ -51,7 +48,7 @@ func Run(tasks []Task, n, m int) error {
 	}
 	close(taskCh)
 	wg.Wait()
-	if !ignoreErrors && errorCount >= int32(m) {
+	if !ignoreErrors && errorCount.Load() >= int32(m) {
 		return ErrErrorsLimitExceeded
 	}
 	return nil
